@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Email Phrase Challenge – Fill in the Blanks</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#e9ebf0; --win:#fff; --bd:#d9dce3; --txt:#1d1d1f; --mut:#6e6e73; --bar:#f4f4f6;
+  --inbg:#f0f1f4; --acc:#0a7aff; --chip:#eef4ff; --chipbd:#c9dcff; --chiptx:#1b4fa8;
+  --okbg:#e3f6e8; --ok:#2f9e52; --oktx:#14602d; --nobg:#fde8e8; --no:#e04848; --notx:#8f1f1f;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#101114; --win:#1e1f23; --bd:#35373d; --txt:#f2f2f4; --mut:#9a9aa2; --bar:#26272c;
+    --inbg:#2c2e34; --chip:#22314d; --chipbd:#35507f; --chiptx:#bcd4ff;
+    --okbg:#173a24; --ok:#3fb868; --oktx:#9be6b3; --nobg:#472226; --no:#e86a6a; --notx:#ffb4b4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#101114; --win:#1e1f23; --bd:#35373d; --txt:#f2f2f4; --mut:#9a9aa2; --bar:#26272c;
+  --inbg:#2c2e34; --chip:#22314d; --chipbd:#35507f; --chiptx:#bcd4ff;
+  --okbg:#173a24; --ok:#3fb868; --oktx:#9be6b3; --nobg:#472226; --no:#e86a6a; --notx:#ffb4b4;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  padding:max(env(safe-area-inset-top,0px),1.6vh) 1.4vw max(env(safe-area-inset-bottom,0px),1.6vh);
+  --fs:19px;
+}
+.win{
+  height:100%; background:var(--win); border:1px solid var(--bd); border-radius:12px;
+  box-shadow:0 12px 40px rgba(0,0,0,.18); display:flex; flex-direction:column; overflow:hidden;
+}
+.titlebar{flex:none;display:flex;align-items:center;gap:8px;padding:0 14px;height:clamp(30px,5vh,40px);background:var(--bar);border-bottom:1px solid var(--bd)}
+.dot{width:12px;height:12px;border-radius:50%}
+.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+.tt{flex:1;text-align:center;font-size:clamp(11px,1.8vh,13px);color:var(--mut);margin-right:44px;font-weight:500}
+.instr{flex:none;padding:.9vh 18px;font-size:clamp(12px,2vh,15px);font-weight:600;border-bottom:1px solid var(--bd)}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:4fr 1fr}
+.mail{min-width:0;min-height:0;display:flex;flex-direction:column;border-right:1px solid var(--bd)}
+.hdr{flex:none;padding:1.2vh 22px;border-bottom:1px solid var(--bd);font-size:clamp(12px,2vh,15px);line-height:1.55}
+.hdr b{display:inline-block;width:4.2em;color:var(--mut);font-weight:500}
+.hdr .subj{font-weight:700;font-size:1.12em}
+.body{flex:1;min-height:0;padding:1.6vh 22px;font-size:var(--fs);line-height:1.85;overflow:hidden}
+.body p{margin-bottom:.55em}
+.cell{position:relative;display:inline-block;vertical-align:baseline;white-space:nowrap}
+.num{font-size:.62em;font-weight:700;color:var(--acc);vertical-align:super;margin:0 .15em 0 .2em}
+.cell input{
+  width:7.6em;font:inherit;font-size:.9em;line-height:1.35;padding:.05em 1.5em .05em .45em;
+  color:var(--txt);background:var(--inbg);border:1px solid transparent;border-bottom:2px solid var(--mut);
+  border-radius:6px;outline:none;
+}
+.cell input:focus{border-color:var(--acc);box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 25%,transparent)}
+.cell .ic{position:absolute;right:.4em;top:50%;transform:translateY(-50%);font-size:.75em;font-weight:700;display:none}
+.cell.ok input{background:var(--okbg);border-color:var(--ok);color:var(--oktx)}
+.cell.ok .ic{display:block;color:var(--ok)}
+.cell.no input{background:var(--nobg);border-color:var(--no);color:var(--notx)}
+.cell.no .ic{display:block;color:var(--no)}
+.foot{flex:none;display:flex;align-items:center;gap:12px;padding:1vh 22px;border-top:1px solid var(--bd);background:var(--bar);font-size:clamp(12px,1.9vh,14px)}
+.prog{font-weight:600;font-variant-numeric:tabular-nums}
+.bar{width:clamp(70px,10vw,140px);height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+button{font:inherit;font-size:.95em;border-radius:7px;padding:.35em .9em;cursor:pointer;border:1px solid var(--bd);background:var(--win);color:var(--txt)}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.msg{margin-left:auto;color:var(--oktx);background:var(--okbg);border:1px solid var(--ok);border-radius:7px;padding:.3em .8em;font-weight:600;display:none}
+.msg.show{display:block}
+.bank{min-width:0;min-height:0;padding:1.6vh 14px;background:var(--bar);overflow:hidden}
+.bank h2{font-size:clamp(12px,1.9vh,14px);letter-spacing:.09em;font-weight:700}
+.bank p{font-size:clamp(11px,1.7vh,13px);color:var(--mut);margin:.3vh 0 1.6vh}
+.chips{display:flex;flex-wrap:wrap;gap:clamp(5px,1vh,9px)}
+.chip{background:var(--chip);border:1px solid var(--chipbd);color:var(--chiptx);border-radius:999px;padding:.28em .85em;font-size:calc(var(--fs)*.8);font-weight:500;user-select:none}
+@media (max-width:700px){body{--fs:clamp(10px,1.9vh,13px)}.cell input{width:6.8em}}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="tt">Mail — Inbox</div></div>
+  <div class="instr">Complete the email with the correct phrases.</div>
+  <div class="main">
+    <section class="mail" aria-label="Email">
+      <div class="hdr">
+        <div><b>From:</b>Emma</div>
+        <div><b>To:</b>Helen</div>
+        <div><b>Subject:</b><span class="subj">Tennis Tournament Next Week</span></div>
+      </div>
+      <div class="body" id="body">
+        <p>Hi Helen,</p>
+        <p>I’ve just got more information about the tournament at the local tennis club next week. I think I’m going to <span data-k="1a"></span> the <span data-k="1b"></span> because I like tennis, and it looks like fun. The tournament isn’t only for people who are good at tennis. They want to <span data-k="2a"></span> people the <span data-k="2b"></span> to play, even if they aren’t very good at it. Why don’t you <span data-k="3a"></span> a <span data-k="3b"></span> at playing a few matches? It’s all friendly and just for fun, so it doesn’t matter if you <span data-k="4a"></span> all your <span data-k="4b"></span>. But if you do very well, you might <span data-k="5a"></span> a <span data-k="5b"></span>!</p>
+        <p>I think they’re looking for members for their club, too. I hope you can make it – we don’t want to <span data-k="6a"></span> the <span data-k="6b"></span> to take part.</p>
+        <p>Text me if you want to know more.</p>
+        <p>Emma</p>
+      </div>
+      <div class="foot">
+        <span class="prog" id="prog" aria-live="polite">0 / 12 correct</span>
+        <div class="bar"><i id="fill"></i></div>
+        <button class="pri" id="check" type="button">Check All</button>
+        <button id="reset" type="button">Reset</button>
+        <div class="msg" id="msg" role="status">Excellent work! You completed the email!</div>
+      </div>
+    </section>
+    <aside class="bank" aria-label="Word bank">
+      <h2>WORD BANK</h2>
+      <p>Choose and type the words</p>
+      <div class="chips" id="chips"></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY={"1a":"join","1b":"club","2a":"give","2b":"chance","3a":"have","3b":"go","4a":"lose","4b":"matches","5a":"win","5b":"prize","6a":"miss","6b":"opportunity"};
+  var WORDS="prize,join,opportunity,go,matches,give,club,lose,chance,win,have,miss".split(",");
+  var order=Object.keys(KEY), cells={}, done={};
+  var chips=document.getElementById("chips");
+  WORDS.forEach(function(w){var s=document.createElement("span");s.className="chip";s.textContent=w;chips.appendChild(s)});
+
+  document.querySelectorAll("[data-k]").forEach(function(h){
+    var k=h.getAttribute("data-k"), c=document.createElement("span");
+    c.className="cell";
+    if(k.charAt(1)==="a"){var n=document.createElement("span");n.className="num";n.textContent=k.charAt(0);c.appendChild(n)}
+    var i=document.createElement("input");
+    i.type="text";i.autocomplete="off";i.autocapitalize="off";i.spellcheck=false;
+    i.setAttribute("aria-label","Blank "+k);
+    var ic=document.createElement("span");ic.className="ic";ic.setAttribute("aria-hidden","true");
+    c.appendChild(i);c.appendChild(ic);h.replaceWith(c);
+    cells[k]={c:c,i:i,ic:ic};
+    i.addEventListener("input",function(){ if(!done[k]){c.className="cell";ic.textContent=""} });
+    i.addEventListener("keydown",function(e){
+      if(e.key==="Enter"){e.preventDefault();if(validate(k,true))focusNext(k)}
+    });
+  });
+
+  function validate(k){
+    var o=cells[k], v=o.i.value.trim().toLowerCase();
+    if(!v){o.c.className="cell";o.ic.textContent="";return false}
+    if(v===KEY[k]){
+      done[k]=true;o.i.value=KEY[k];o.i.readOnly=true;o.c.className="cell ok";o.ic.textContent="✓";
+      update();return true;
+    }
+    done[k]=false;o.c.className="cell no";o.ic.textContent="✕";return false;
+  }
+  function focusNext(from){
+    var s=order.indexOf(from), n=order.length;
+    for(var j=1;j<=n;j++){var k=order[(s+j)%n];if(!done[k]){cells[k].i.focus();return}}
+  }
+  function update(){
+    var n=order.filter(function(k){return done[k]}).length;
+    document.getElementById("prog").textContent=n+" / 12 correct";
+    document.getElementById("fill").style.width=(n/12*100)+"%";
+    document.getElementById("msg").classList.toggle("show",n===12);
+  }
+  document.getElementById("check").addEventListener("click",function(){
+    order.forEach(function(k){if(!done[k])validate(k)});update();
+    var f=order.filter(function(k){return !done[k]})[0];if(f)cells[f].i.focus();
+  });
+  document.getElementById("reset").addEventListener("click",function(){
+    order.forEach(function(k){var o=cells[k];done[k]=false;o.i.value="";o.i.readOnly=false;o.c.className="cell";o.ic.textContent=""});
+    update();cells["1a"].i.focus();
+  });
+  cells["1a"].i.focus();
+  function fit(){
+    var b=document.getElementById("body"),lo=11,hi=36,s;
+    for(var n=0;n<10;n++){
+      s=(lo+hi)/2;document.body.style.setProperty("--fs",s+"px");
+      if(b.scrollHeight>b.clientHeight+1)hi=s;else lo=s;
+    }
+    document.body.style.setProperty("--fs",lo+"px");
+  }
+  fit();window.addEventListener("resize",fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+})();
+</script>
+</body>
+</html>
